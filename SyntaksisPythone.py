@@ -231,5 +231,5 @@ def f(x):
         return
     
 arg = 2.3
-print(f(arg))
-print(type(f(arg)))
+# print(f(arg))
+# print(type(f(arg)))
