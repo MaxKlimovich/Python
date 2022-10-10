@@ -1,101 +1,51 @@
-
-
-# Создайте программу для игры с конфетами человек против человека.
-# Условие задачи: На столе лежит 2021 конфета. Играют два игрока делая ход друг после друга. 
-# Первый ход определяется жеребьёвкой. За один ход можно забрать не более чем 28 конфет. 
-# Все конфеты оппонента достаются сделавшему последний ход. 
-# Сколько конфет нужно взять первому игроку, чтобы забрать все конфеты у своего конкурента?
-# a) Добавьте игру против бота
-# b) Подумайте как наделить бота ""интеллектом""
-
-
-# вариант человек против человека:
-# from random import randint
-
-# def input_dat(name):
-#     x = int(input(f"{name}, введите количество конфет, которое возьмете от 1 до 28: "))
-#     while x < 1 or x > 28:
-#         x = int(input(f"{name}, введите корректное количество конфет: "))
-#     return x
-
-# def p_print(name, k, counter, value):
-#     print(name, "взял ", k, "теперь у него ", counter, "Осталось на столе ", value, "конфет.")
-
-# player1 = input("Введите имя первого игрока: ")
-# player2 = input("Введите имя второго игрока: ")
-# value = int(input("Введите количество конфет на столе: "))
-# flag = randint(0,2)
-# if flag:
-#     print("Первый ходит ", player1)
-# else:
-#     print("Первый ходит ", player2)
-
-# counter1 = 0 
-# counter2 = 0
-
-# while value > 28:
-#     if flag:
-#         k = input_dat(player1)
-#         counter1 += k
-#         value -= k
-#         flag = False
-#         p_print(player1, k, counter1, value)
-#     else:
-#         k = input_dat(player2)
-#         counter2 += k
-#         value -= k
-#         flag = True
-#         p_print(player2, k, counter2, value)
-
-# if flag:
-#     print("Выиграл ", player1)
-# else:
-#     print("Выиграл ", player2)
-
-
-
-
-
-# вариант человек против бота:
-from random import randint
-
-def input_dat(name):
-    x = int(input(f"{name}, введите количество конфет, которое возьмете от 1 до 28: "))
-    while x < 1 or x > 28:
-        x = int(input(f"{name}, введите корректное количество конфет: "))
-    return x
-
-
-def p_print(name, k, counter, value):
-    print(f"Ходил {name}, он взял {k}, теперь у него {counter}. Осталось на столе {value} конфет.")
-
-player1 = input("Введите имя первого игрока: ")
-player2 = "Bot"
-value = int(input("Введите количество конфет на столе: "))
-flag = randint(0,2) # флаг очередности
-if flag:
-    print(f"Первый ходит {player1}")
+# 4. Реализуйте RLE алгоритм: реализуйте модуль сжатия и восстановления данных.
+# Function to encode given text
+def encoding(text):
+    code_text = ""
+    count = 0
+    repetitions = 1
+    while count < len(text):
+        try:
+            if text[count] == text[count+1]:
+                repetitions += 1
+            elif repetitions == 1:
+                code_text += text[count]
+            elif repetitions > 1:
+                code_text += str(repetitions) + text[count]
+                repetitions = 1
+        except IndexError:
+            if repetitions == 1:
+                code_text += text[count]
+            elif repetitions > 1:
+                code_text += str(repetitions) + text[count]
+        count += 1
+    return code_text
+# Function to decode given cipher
+def decoding(cipher):
+    decoded_text = ""
+    count = 0
+    repetitions = 0
+    while count < len(cipher):
+        if str(cipher[count]).isdigit():
+            repetitions = int(cipher[count])
+        elif repetitions > 0:
+            for x in range(repetitions):
+                decoded_text += cipher[count]
+                repetitions = 0
+        elif repetitions == 0:
+            decoded_text += cipher[count]
+        count +=1
+    return decoded_text
+# Text input  
+text = input("Enter a text: ")
+# Decides encode or decode
+numbers_in_text = 0
+for num in text:
+    if num.isdigit():
+        numbers_in_text += 1
+# If any digits exists it mean coded text, decoding
+if numbers_in_text > 0:
+    print(f"Decoding: {decoding(text)}")
+# If no digits exists it mean pure text, encoding
 else:
-    print(f"Первый ходит {player2}")
-
-counter1 = 0 
-counter2 = 0
-
-while value > 28:
-    if flag:
-        k = input_dat(player1)
-        counter1 += k
-        value -= k
-        flag = False
-        p_print(player1, k, counter1, value)
-    else:
-        k = randint(1,29)
-        counter2 += k
-        value -= k
-        flag = True
-        p_print(player2, k, counter2, value)
-
-if flag:
-    print(f"Выиграл {player1}")
-else:
-    print(f"Выиграл {player2}")
+    print(f"Encoding: {encoding(text)}")
